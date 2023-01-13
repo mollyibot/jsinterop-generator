@@ -32,6 +32,7 @@ Examples:
 
 load("@com_google_j2cl//build_defs:rules.bzl", "j2cl_library")
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
+load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
 
 _is_bazel = not hasattr(native, "genmpm")  # this_is_bazel
 
@@ -387,6 +388,45 @@ def jsinterop_generator(
             java_library_args["constraints"] = ["gwt", "public"]
 
         native.java_library(**java_library_args)
+
+    out_jar = ":lib" + name + "_src.jar"
+    print("the name of lib jar is " + out_jar)
+    extract_java_srcjar(
+        name = name + "_transpile_gen",
+        input_jar = out_jar,
+    )
+
+    javadoc_library(
+        name = name + "-javadoc",
+        srcs = [":" + name + "_transpile_gen"],
+        deps = deps_java,
+    )
+
+def _extract_java_srcjar(ctx):
+    """Extracts the generated java files from transpiled source jar.
+
+    Returns tree artifact outputs of the extracted java sources.
+    """
+
+    output_dir = ctx.actions.declare_directory(ctx.label.name)
+
+    ctx.actions.run_shell(
+        command = "unzip -q %s *.java -d %s" % (ctx.file.input_jar.path, output_dir.path),
+        inputs = [ctx.file.input_jar],
+        outputs = [output_dir],
+    )
+
+    return [DefaultInfo(files = depset([output_dir]))]
+
+extract_java_srcjar = rule(
+    attrs = {
+        "input_jar": attr.label(
+            allow_single_file = [".jar"],
+            mandatory = True,
+        ),
+    },
+    implementation = _extract_java_srcjar,
+)
 
 def _absolute_label(label):
     """Expand a label to be of the full form //package:foo.
