@@ -391,16 +391,17 @@ def jsinterop_generator(
 
     out_jar = ":lib" + name + "_src.jar"
     print("the name of lib jar is " + out_jar)
-    extract_java_srcjar(
-        name = name + "_transpile_gen",
-        input_jar = out_jar,
-    )
 
-    javadoc_library(
-        name = name + "-javadoc",
-        srcs = [":" + name + "_transpile_gen"],
-        deps = deps_java,
-    )
+#    extract_java_srcjar(
+#        name = name + "_transpile_gen",
+#        input_jar = out_jar,
+#    )
+
+#    javadoc_library(
+#        name = name + "-javadoc",
+#        srcs = [":" + name + "_transpile_gen"],
+#        deps = deps_java,
+#    )
 
 def _extract_java_srcjar(ctx):
     """Extracts the generated java files from transpiled source jar.
