@@ -401,8 +401,8 @@ def jsinterop_generator(
         name = name + "-javadoc",
         srcs = [":" + name + "_transpile_gen"],
         deps = deps_java,
-        root_packages = ["elemental2.dom"],
-    )
+        #        root_packages = ["elemental2.dom"],
+    )gi
 
 def _extract_java_srcjar(ctx):
     """Extracts the generated java files from transpiled source jar.
