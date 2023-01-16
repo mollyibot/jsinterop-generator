@@ -403,7 +403,7 @@ def jsinterop_generator(
             name = name + "-javadoc",
             srcs = [":" + name + "_transpile_gen"],
             deps = deps_java,
-            root_packages = ["elemental2.dom"],
+            root_packages = root_packages,
         )
     else:
         javadoc_library(
