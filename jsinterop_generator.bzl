@@ -263,7 +263,8 @@ def jsinterop_generator(
         runtime_deps = [],
         custom_preprocessing_pass = [],
         visibility = None,
-        testonly = None):
+        testonly = None,
+        root_pacakges = None):
     if not srcs and not exports:
         fail("Empty rule. Nothing to generate or import.")
 
@@ -396,13 +397,20 @@ def jsinterop_generator(
         name = name + "_transpile_gen",
         input_jar = out_jar,
     )
-
-    javadoc_library(
-        name = name + "-javadoc",
-        srcs = [":" + name + "_transpile_gen"],
-        deps = deps_java,
-        root_packages = ["elemental2.dom"],
-    )
+    if root_pacakges:
+        print("hhhhhh there is root package")
+        javadoc_library(
+            name = name + "-javadoc",
+            srcs = [":" + name + "_transpile_gen"],
+            deps = deps_java,
+            root_packages = ["elemental2.dom"],
+        )
+    else:
+        javadoc_library(
+            name = name + "-javadoc",
+            srcs = [":" + name + "_transpile_gen"],
+            deps = deps_java,
+        )
 
 def _extract_java_srcjar(ctx):
     """Extracts the generated java files from transpiled source jar.
