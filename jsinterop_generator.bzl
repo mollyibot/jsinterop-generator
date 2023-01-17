@@ -391,8 +391,6 @@ def jsinterop_generator(
         native.java_library(**java_library_args)
 
     out_jar = ":lib" + name + "-src.jar"
-    print("the name of lib jar is " + out_jar)
-    print(name + "_transpile_gen")
     extract_java_srcjar(
         name = name + "_transpile_gen",
         input_jar = out_jar,

@@ -9,10 +9,6 @@ http_archive(
     urls = ["https://github.com/google/bazel-common/archive/227a23a508a2fab0fa67ffe2d9332ae536a40edc.zip"],
 )
 
-load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
-
-google_common_workspace_rules()
-
 # Load J2CL separately
 _J2CL_VERSION = "master"
 
