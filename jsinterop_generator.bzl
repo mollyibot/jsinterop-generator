@@ -264,7 +264,7 @@ def jsinterop_generator(
         custom_preprocessing_pass = [],
         visibility = None,
         testonly = None,
-        root_packages = None):
+        generate_javadoc = False):
     if not srcs and not exports:
         fail("Empty rule. Nothing to generate or import.")
 
@@ -390,20 +390,13 @@ def jsinterop_generator(
 
         native.java_library(**java_library_args)
 
-    out_jar = ":lib" + name + "-src.jar"
-    extract_java_srcjar(
-        name = name + "_transpile_gen",
-        input_jar = out_jar,
-    )
-    if root_packages:
-        print("hhhhhh there is root package")
-        javadoc_library(
-            name = name + "-javadoc",
-            srcs = [":" + name + "_transpile_gen"],
-            deps = deps_java,
-            root_packages = root_packages,
+    if generate_javadoc:
+        out_jar = ":lib" + name + "-src.jar"
+        extract_java_srcjar(
+            name = name + "_transpile_gen",
+            input_jar = out_jar,
         )
-    else:
+
         javadoc_library(
             name = name + "-javadoc",
             srcs = [":" + name + "_transpile_gen"],
