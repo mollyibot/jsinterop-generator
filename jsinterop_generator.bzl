@@ -408,7 +408,7 @@ def jsinterop_generator(
         native.java_library(**java_library_args)
 
     if generate_javadoc:
-        extract_java_srcjar(
+        extract_srcjar(
             name = name + "_transpile_gen",
             srcjar = ":%s.srcjar" % jsinterop_generator_rule_name,
         )
