@@ -392,7 +392,7 @@ def jsinterop_generator(
     if generate_javadoc:
         extract_srcjar(
             name = name + "_transpile_gen",
-            srcjar = ":%s.srcjar" % jsinterop_generator_rule_name,
+            srcjar = ":lib" + name + "-src.jar",
         )
 
         javadoc_library(
