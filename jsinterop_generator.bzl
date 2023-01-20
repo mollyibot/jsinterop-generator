@@ -390,11 +390,11 @@ def jsinterop_generator(
 
         native.java_library(**java_library_args)
 
-    if generate_javadoc:
-        out_jar = ":lib" + name + "-src.jar"
+    if generate_java_doc:
+        srcjar = ":%s.srcjar" % jsinterop_generator_rule_name
         extract_java_srcjar(
             name = name + "_transpile_gen",
-            input_jar = out_jar,
+            input_jar = srcjar,
         )
 
         javadoc_library(
@@ -403,7 +403,7 @@ def jsinterop_generator(
             deps = deps_java,
         )
 
-def _extract_java_srcjar(ctx):
+def _extract_srcjar(ctx):
     """Extracts the generated java files from transpiled source jar.
 
     Returns tree artifact outputs of the extracted java sources.
@@ -419,15 +419,17 @@ def _extract_java_srcjar(ctx):
 
     return [DefaultInfo(files = depset([output_dir]))]
 
-extract_java_srcjar = rule(
+# TODO(mollyibot): Change the jsinterop_generator rule to directly output the tree artifact
+extract_srcjar = rule(
     attrs = {
-        "input_jar": attr.label(
+        "srcjar": attr.label(
             allow_single_file = [".jar"],
             mandatory = True,
         ),
     },
-    implementation = _extract_java_srcjar,
+    implementation = _extract_srcjar,
 )
+
 
 def _absolute_label(label):
     """Expand a label to be of the full form //package:foo.

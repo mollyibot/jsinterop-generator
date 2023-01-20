@@ -2,14 +2,6 @@ workspace(name = "com_google_jsinterop_generator")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-_BAZEL_COMMON_VERSION = "227a23a508a2fab0fa67ffe2d9332ae536a40edc"
-
-http_archive(
-    name = "google_bazel_common",
-    strip_prefix = "bazel-common-%s" % _BAZEL_COMMON_VERSION,
-    urls = ["https://github.com/google/bazel-common/archive/%s.zip" % _BAZEL_COMMON_VERSION],
-)
-
 # Load J2CL separately
 _J2CL_VERSION = "master"
 
