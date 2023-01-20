@@ -389,7 +389,7 @@ def jsinterop_generator(
             java_library_args["constraints"] = ["gwt", "public"]
 
         native.java_library(**java_library_args)
-    if generate_javadoc:
+    if generate_javadoc and generate_gwt_library:
         extract_srcjar(
             name = name + "_transpile_gen",
             srcjar = ":lib" + name + "-src.jar",
