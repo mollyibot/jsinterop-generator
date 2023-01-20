@@ -263,15 +263,8 @@ def jsinterop_generator(
         runtime_deps = [],
         custom_preprocessing_pass = [],
         visibility = None,
-        # copybara:strip_begin(TypeScript is not shipped with opensource version of the generator)
-        with_typescript_lib = False,
-        # copybara:strip_end
         testonly = None,
-        # copybara:strip_begin(//tools/build_defs/label:def.bzl not opensource)
         generate_javadoc = False):
-    # copybara:strip_end_and_replace_begin
-    # generate_javadoc = True):
-    # copybara:replace_end
     if not srcs and not exports:
         fail("Empty rule. Nothing to generate or import.")
 
@@ -302,18 +295,11 @@ def jsinterop_generator(
         if conversion_mode == "closure":
             if j2cl_js_deps == None:
                 externs_lib_name = "%s-externs" % name
-                js_library(
+                closure_js_library(
                     name = externs_lib_name,
                     srcs = srcs,
-                    check_level = "OFF",  # copybara:strip(invalid attribute for closure_js_library)
                 )
                 deps_j2cl += [":%s" % externs_lib_name]
-
-            # copybara:strip_begin(TypeScript is not shipped with opensource version of the generator)
-
-        elif conversion_mode == "typescript":
-            generator_srcs += ["//third_party/java_src/jsinterop_generator/internal_do_not_use:array_type_d_ts"]
-            # copybara:strip_end
 
         else:
             fail("Unknown conversion mode")
@@ -344,21 +330,18 @@ def jsinterop_generator(
             custom_preprocessing_pass = custom_preprocessing_pass,
             testonly = testonly,
             visibility = ["//visibility:public"],
-            # copybara:strip_begin(TypeScript is not shipped with opensource version of the generator)
-            with_typescript_lib = with_typescript_lib,
-            # copybara:strip_end
         )
 
         generated_jars = [":%s" % jsinterop_generator_rule_name]
         gwt_xml_file = ":%s.gwt.xml" % gwt_module_name
 
         deps_java += [
-            Label("//third_party/java_src/j2cl:jsinterop-annotations"),
-            Label("//third_party/java_src/jsinterop_base:jsinterop-base"),
+            Label("@com_google_j2cl//:jsinterop-annotations"),
+            Label("@com_google_jsinterop_base//:jsinterop-base"),
         ]
         deps_j2cl += [
-            Label("//third_party/java_src/j2cl:jsinterop-annotations-j2cl"),
-            Label("//third_party/java_src/jsinterop_base:jsinterop-base-j2cl"),
+            Label("@com_google_j2cl//:jsinterop-annotations-j2cl"),
+            Label("@com_google_jsinterop_base//:jsinterop-base-j2cl"),
         ]
 
     else:
@@ -406,7 +389,6 @@ def jsinterop_generator(
             java_library_args["constraints"] = ["gwt", "public"]
 
         native.java_library(**java_library_args)
-
     if generate_javadoc:
         extract_srcjar(
             name = name + "_transpile_gen",
@@ -445,7 +427,6 @@ extract_srcjar = rule(
     },
     implementation = _extract_srcjar,
 )
-
 
 def _absolute_label(label):
     """Expand a label to be of the full form //package:foo.
