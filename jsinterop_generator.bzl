@@ -428,32 +428,7 @@ _extract_srcjar = rule(
     },
     implementation = _extract_srcjar_impl,
 )
-def _extract_srcjar(ctx):
-    """Extracts the generated java files from transpiled source jar.
 
-    Returns tree artifact outputs of the extracted java sources.
-    """
-
-    output_dir = ctx.actions.declare_directory(ctx.label.name)
-
-    ctx.actions.run_shell(
-        command = "unzip -q %s *.java -d %s" % (ctx.file.srcjar.path, output_dir.path),
-        inputs = [ctx.file.srcjar],
-        outputs = [output_dir],
-    )
-
-    return [DefaultInfo(files = depset([output_dir]))]
-
-# TODO(mollyibot): Change the jsinterop_generator rule to directly output the tree artifact
-extract_srcjar = rule(
-    attrs = {
-        "srcjar": attr.label(
-            allow_single_file = [".jar"],
-            mandatory = True,
-        ),
-    },
-    implementation = _extract_srcjar,
-)
 
 def _absolute_label(label):
     """Expand a label to be of the full form //package:foo.
