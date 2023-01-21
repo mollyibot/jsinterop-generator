@@ -401,6 +401,7 @@ def jsinterop_generator(
             srcs = [":" + name + "_generated_files"],
             tags = ["manual", "notap"],
             deps = deps_java,
+            visibility = ["//visibility:private"],
         )
 
 def _extract_srcjar_impl(ctx):
