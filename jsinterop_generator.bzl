@@ -389,7 +389,8 @@ def jsinterop_generator(
             java_library_args["constraints"] = ["gwt", "public"]
 
         native.java_library(**java_library_args)
-   if _ENABLE_JAVADOC and generate_gwt_library:
+
+    if _ENABLE_JAVADOC and generate_gwt_library:
         _extract_srcjar(
             name = name + "_generated_files",
             srcjar = ":%s.srcjar" % jsinterop_generator_rule_name,
@@ -428,7 +429,6 @@ _extract_srcjar = rule(
     },
     implementation = _extract_srcjar_impl,
 )
-
 
 def _absolute_label(label):
     """Expand a label to be of the full form //package:foo.
