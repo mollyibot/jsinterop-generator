@@ -37,7 +37,6 @@ load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
 _is_bazel = not hasattr(native, "genmpm")  # this_is_bazel
 
 JS_INTEROP_RULE_NAME_PATTERN = "%s__internal_src_generated"
-_ENABLE_JAVADOC = True
 JsInteropGeneratorInfo = provider()
 
 def _get_generator_files(deps):
@@ -389,21 +388,20 @@ def jsinterop_generator(
 
         native.java_library(**java_library_args)
 
-    if _ENABLE_JAVADOC:
-        _extract_srcjar(
-            name = name + "_generated_files",
-            srcjar = ":%s.srcjar" % jsinterop_generator_rule_name,
-            tags = ["manual", "notap"],
-            visibility = ["//visibility:private"],
-        )
+    _extract_srcjar(
+        name = name + "_generated_files",
+        srcjar = ":%s.srcjar" % jsinterop_generator_rule_name,
+        tags = ["manual", "notap"],
+        visibility = ["//visibility:private"],
+    )
 
-        javadoc_library(
-            name = name + "-javadoc",
-            srcs = [":" + name + "_generated_files"],
-            tags = ["manual", "notap"],
-            deps = deps_java,
-            visibility = ["//visibility:private"],
-        )
+    javadoc_library(
+        name = name + "-javadoc",
+        srcs = [":" + name + "_generated_files"],
+        tags = ["manual", "notap"],
+        deps = deps_java,
+        visibility = ["//visibility:private"],
+    )
 
 def _extract_srcjar_impl(ctx):
     """Extracts the generated java files from transpiled source jar.
