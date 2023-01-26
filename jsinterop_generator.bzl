@@ -37,7 +37,7 @@ load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
 _is_bazel = not hasattr(native, "genmpm")  # this_is_bazel
 
 JS_INTEROP_RULE_NAME_PATTERN = "%s__internal_src_generated"
-
+_ENABLE_JAVADOC = True
 JsInteropGeneratorInfo = provider()
 
 def _get_generator_files(deps):
@@ -263,8 +263,7 @@ def jsinterop_generator(
         runtime_deps = [],
         custom_preprocessing_pass = [],
         visibility = None,
-        testonly = None,
-        _ENABLE_JAVADOC = True):
+        testonly = None):
     if not srcs and not exports:
         fail("Empty rule. Nothing to generate or import.")
 
@@ -390,10 +389,12 @@ def jsinterop_generator(
 
         native.java_library(**java_library_args)
 
-    if _ENABLE_JAVADOC and generate_gwt_library:
+    if _ENABLE_JAVADOC:
         _extract_srcjar(
             name = name + "_generated_files",
             srcjar = ":%s.srcjar" % jsinterop_generator_rule_name,
+            tags = ["manual", "notap"],
+            visibility = ["//visibility:private"],
         )
 
         javadoc_library(
