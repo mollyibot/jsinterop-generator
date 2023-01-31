@@ -32,7 +32,7 @@ Examples:
 
 load("@com_google_j2cl//build_defs:rules.bzl", "j2cl_library")
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_js_library")
-load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
+load("@google_bazel_common_javadoc//:javadoc.bzl", "javadoc_library")
 
 _is_bazel = not hasattr(native, "genmpm")  # this_is_bazel
 
